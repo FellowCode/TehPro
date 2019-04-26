@@ -1,0 +1,51 @@
+$main_bg_color: #29ad63;
+$main_text_color: #414141;
+$dark_text_color: #4c4c4c;
+$red_color: #a80000;
+
+$m_px: 600px;
+$l_px: 992px;
+$xl_px: 1200px;
+
+@import 'index';
+@import 'form';
+
+.no-padding{
+  padding: 0 !important;
+}
+.full-width{
+  width: 100%;
+}
+.main-text-color{
+  color: $main_text_color;
+}
+.dark-text-color{
+  color: $dark_text_color;
+}
+.main-bg-color{
+  background-color: $main_bg_color !important;
+}
+.transparent-bg{
+  background-color: rgba(0,0,0,0) !important;
+}
+.col{
+  background-color: white;
+}
+html{
+  background: url('/static/img/bg.jpg') repeat-x center center fixed;
+  background-size: auto 100vh;
+}
+@media only screen and (max-width: $m_px){
+  html{
+    background-size: auto 140vh;
+  }
+}
+@media only screen and (min-width: 1750px)  {
+  html{
+    background-size: 100vw auto;
+  }
+}
+.container {
+    width: 90%;
+    max-width: 1500px;
+}
