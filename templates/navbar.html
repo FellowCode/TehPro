@@ -6,16 +6,24 @@
                 <li class="text"><a href="/">Главная</a></li>
             </ul>
             <ul id="nav-mobile" class="right">
-            {% if user.is_authenticated %}
-                {% if user.is_superuser %}
-                    <li class="icon"><a href="/admin/"><i class="material-icons">star</i></a></li>
+                {% if user.is_authenticated %}
+                    {% if user.is_superuser %}
+                        <li class="icon"><a href="/admin/"><i class="material-icons">star</i></a></li>
+                    {% endif %}
+                    {% if user.is_staff %}
+                        <li><a href="/order/add/">Добавить заявку</a></li>
+                        <li><a href="/account/create_group/">Создать группу</a></li>
+                    {% endif %}
+                    {% if user.extuser.is_worker %}
+                        <li><a href="/order/my/">Мои заявки</a></li>
+                    {% endif %}
+                    <li><a href="/account/">Личный кабинет</a></li>
+                    <li class="hide-on-small-only"><a href="/account/logout/">Выйти</a></li>
+                    <li class="hide-on-med-and-up"><a href="/account/logout/"><i class="material-icons">exit_to_app</i></a>
+                    </li>
+                {% else %}
+                    <li><a href="/account/auth/">Вход</a></li>
                 {% endif %}
-                <li><a href="/account/">Личный кабинет</a></li>
-                <li class="hide-on-small-only"><a href="/account/logout/">Выйти</a></li>
-                <li class="hide-on-med-and-up"><a href="/account/logout/"><i class="material-icons">exit_to_app</i></a></li>
-            {% else %}
-                <li><a href="/account/auth/">Вход</a></li>
-            {% endif %}
             </ul>
         </div>
     </div>

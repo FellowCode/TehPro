@@ -12,3 +12,4 @@ class ExtUserAdmin(admin.ModelAdmin):
 @admin.register(WorkerGroup)
 class WorkerGroupAdmin(admin.ModelAdmin):
     pass
+

@@ -3,6 +3,14 @@ from django.db import models
 from django.dispatch import receiver
 from django.db.models.signals import post_save
 
+def get_full_name(self):
+    title = self.first_name + ' ' + self.last_name
+    if len(title) < 2:
+        title = self.username
+    return title
+
+User.add_to_class("__str__", get_full_name)
+
 class ExtUser(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
 
@@ -18,7 +26,10 @@ class ExtUser(models.Model):
         verbose_name_plural = 'ExtUsers'
 
     def __str__(self):
-        return self.user.first_name + ' ' + self.user.last_name
+        title = self.user.first_name + ' ' + self.user.last_name
+        if len(title) < 2:
+            title = self.user.username
+        return title
 
 
 class Group(models.Model):

@@ -1,4 +1,6 @@
 $main_bg_color: #29ad63;
+$main_accent_color: #2bc676;
+$main_dark_color: #289d56;
 $main_text_color: #414141;
 $dark_text_color: #4c4c4c;
 $red_color: #a80000;
@@ -9,7 +11,18 @@ $xl_px: 1200px;
 
 @import 'index';
 @import 'form';
+@import 'user_orders';
 
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0,0,0,0);
+  border: 0;
+}
 .no-padding{
   padding: 0 !important;
 }
