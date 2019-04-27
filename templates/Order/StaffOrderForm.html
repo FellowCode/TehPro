@@ -11,7 +11,9 @@
             <form method="post">
                 {% csrf_token %}
                 <div class="col s12 m10 offset-m1 l8 offset-l2 xl6 offset-xl3 form z-depth-1">
-                    <h4 class="title center-align dark-text-color">Добавление заявки</h4>
+                    <h4 class="title center-align dark-text-color">{% if form_type == 'add' %}Добавление
+                        заявки{% else %}Редактирование заявки{% endif %}</h4>
+                    <input name="id" type="hidden" value="{{ form_order.id.value|default_if_none:"" }}">
                     <div class="row">
                         <div class="input-field col s10 offset-s1">
                             <input id="cable_number" name="cable_number" type="number"
@@ -27,12 +29,12 @@
                     <div class="row">
                         <div class="input-field col s5 offset-s1">
                             <input id="appointed_date" type="text" name="appointed_date" class="datepicker"
-                                   value="{{ form_order.appointed_date.value|default_if_none:"" }}">
+                                   value="{{ form_order.appointed_date.value.day|stringformat:"02d."|default_if_none:"" }}{{ form_order.appointed_date.value.month|stringformat:"02d."|default_if_none:"" }}{{ form_order.appointed_date.value.year|default_if_none:"" }}">
                             <label for="appointed_date">Дата</label>
                             {% if form_order.appointed_date.errors %}
                                 <span class="helper-text error">{{ form_order.appointed_date.errors.0|safe }}</span>
                             {% else %}
-                                <span class="helper-text"></span>
+                                <span class="helper-text">Формат 24.12.2019</span>
                             {% endif %}
                         </div>
                         <div class="input-field col s5">
@@ -62,7 +64,8 @@
                         <div class="input-field col s10 offset-s1">
                             <select class="browser-default" name="order_type">
                                 {% for order_type in order_types %}
-                                    <option value="{{ order_type.id }}" {% if order_type.id == form_order.order_type.value %}selected{% endif %}>{{ order_type.name }}</option>
+                                    <option value="{{ order_type.id }}"
+                                            {% if order_type.id == form_order.order_type.value %}selected{% endif %}>{{ order_type.name }}</option>
                                 {% endfor %}
                             </select>
                             {% if form_order.order_type.errors %}
@@ -147,7 +150,7 @@
                     </div>
                     <div class="button">
                         <button class="btn waves-effect waves-light main-bg-color" type="submit" name="action">
-                            Создать заявку
+                            {% if form_type == 'add' %}Создать заявку{% else %}Сохранить данные{% endif %}
                         </button>
                     </div>
                 </div>

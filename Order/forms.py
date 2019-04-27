@@ -29,6 +29,19 @@ class AddOrderForm(forms.Form):
             self.add_error('order_type', 'Неверный тип заказа')
         return order_type
 
+class ChangeOrderForm(AddOrderForm):
+    id = forms.IntegerField()
+    def clean_cable_number(self):
+        return self.cleaned_data['cable_number']
+
+    def clean(self):
+        cleaned_data = super(ChangeOrderForm, self).clean()
+        cable = cleaned_data['cable_number']
+        order = Order.objects.filter(cable_number=cable).first()
+        if order and order.id != cleaned_data['id']:
+            self.add_error('cable_number', 'Такой номер уже используется')
+        return cleaned_data
+
 class ClientForm(forms.Form):
     first_name = forms.CharField(max_length=128)
     last_name = forms.CharField(max_length=128)
