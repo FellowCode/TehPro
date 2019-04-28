@@ -1,4 +1,16 @@
 {% load static %}
+<ul id="menu" class="dropdown-content">
+    {% if user.is_staff %}
+        <li><a href="/order/add/">Добавить заявку</a></li>
+        <li><a href="/order/list/">Список заявок</a></li>
+        <li><a href="/account/create_group/">Создать группу</a></li>
+    {% endif %}
+    {% if user.extuser.is_worker %}
+        <li><a href="/account/group/">Мой отряд</a></li>
+        <li><a href="/order/worker/list/">Мои заявки</a></li>
+    {% endif %}
+    <li><a href="/account/">Личный кабинет</a></li>
+</ul>
 <nav>
     <div class="nav-wrapper main-bg-color">
         <div class="container">
@@ -6,18 +18,12 @@
                 <li class="text"><a href="/">Главная</a></li>
             </ul>
             <ul id="nav-mobile" class="right">
+                {% if user.is_superuser %}
+                    <li class="icon"><a href="/admin/"><i class="material-icons">star</i></a></li>
+                {% endif %}
                 {% if user.is_authenticated %}
-                    {% if user.is_superuser %}
-                        <li class="icon"><a href="/admin/"><i class="material-icons">star</i></a></li>
-                    {% endif %}
-                    {% if user.is_staff %}
-                        <li><a href="/order/add/">Добавить заявку</a></li>
-                        <li><a href="/account/create_group/">Создать группу</a></li>
-                    {% endif %}
-                    {% if user.extuser.is_worker %}
-                        <li><a href="/order/my/">Мои заявки</a></li>
-                    {% endif %}
-                    <li><a href="/account/">Личный кабинет</a></li>
+                    <li><a class="dropdown-trigger" href="#!" data-target="menu">Меню<i
+                            class="material-icons right">arrow_drop_down</i></a></li>
                     <li class="hide-on-small-only"><a href="/account/logout/">Выйти</a></li>
                     <li class="hide-on-med-and-up"><a href="/account/logout/"><i class="material-icons">exit_to_app</i></a>
                     </li>

@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from django.http import HttpResponse
+from django.http import HttpResponse, Http404
 from django.shortcuts import render, redirect
 
 from .forms import *
@@ -75,3 +75,17 @@ def create_group(request):
         data['form'] = form
         return render(request, 'Account/Create_group.html', data)
     return render(request, 'Account/Create_group.html', data)
+
+def worker_group(request):
+    user = request.user
+    group = user.extuser.group
+    data = {}
+    if group:
+        if request.method == 'POST':
+            form = GroupForm(request.POST, instance=group)
+            if form.is_valid():
+                form.save()
+                return redirect('/')
+        data['form'] = GroupForm(instance=group)
+        return render(request, 'Account/WorkerGroupForm.html', data)
+    raise Http404

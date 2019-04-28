@@ -1,0 +1,105 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}ТехПро: Регистрация{% endblock %}
+
+{% block stylesheet %}
+{% endblock %}
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <form method="post">
+                {% csrf_token %}
+                <div class="col s12 m10 offset-m1 l8 offset-l2 xl6 offset-xl3 form z-depth-1">
+                    <h4 class="title center-align dark-text-color">"{{ request.user.extuser.group.name }}"</h4>
+                    <h5 class="center-align">В наличии</h5>
+                    <div class="row">
+                        <div class="col s5 offset-s1 counter-input">
+                            <div class="row">
+                                <div class="col s6">
+                                    <h6 class="right-align input-name">Штекеры RJ45</h6>
+                                </div>
+                                <div class="col s3">
+                                    <input name="plug" type="number" class="browser-default"
+                                    value="{{ form.plug.value }}">
+                                </div>
+                                <div class="col s3 no-padding">
+                                    <a href="#" data-target="plug" id="inc" class="counter"><i class="material-icons small">add</i></a>
+                                    <a href="#" data-target="plug" id="dec" class="counter"><i class="material-icons small">remove</i></a>
+                                </div>
+                                {% if form.plug.errors %}
+                                    <div class="col s12 error">{{ form.plug.errors.0|safe }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="col s5 counter-input">
+                            <div class="row">
+                                <div class="col s6">
+                                    <h6 class="right-align input-name">Кабель (м)</h6>
+                                </div>
+                                <div class="col s3">
+                                    <input name="cable" type="number" class="browser-default"
+                                    value="{{ form.cable.value }}">
+                                </div>
+                                <div class="col s3 no-padding">
+                                    <a href="#" data-step="10" data-target="cable" id="inc" class="counter"><i class="material-icons small">add</i></a>
+                                    <a href="#" data-step="10" data-target="cable" id="dec" class="counter"><i class="material-icons small">remove</i></a>
+                                </div>
+                                {% if form.cable.errors %}
+                                    <div class="col s12 error">{{ form.cable.errors.0|safe }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col s5 offset-s1 counter-input">
+                            <div class="row">
+                                <div class="col s6">
+                                    <h6 class="right-align input-name">Розетки RJ45</h6>
+                                </div>
+                                <div class="col s3">
+                                    <input name="rosette" type="number" class="browser-default"
+                                    value="{{ form.rosette.value }}">
+                                </div>
+                                <div class="col s3 no-padding">
+                                    <a href="#" data-target="rosette" id="inc" class="counter"><i class="material-icons small">add</i></a>
+                                    <a href="#" data-target="rosette" id="dec" class="counter"><i class="material-icons small">remove</i></a>
+                                </div>
+                                {% if form.rosette.errors %}
+                                    <div class="col s12 error">{{ form.rosette.errors.0|safe }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="col s5 counter-input">
+                            <div class="row">
+                                <div class="col s6">
+                                    <h6 class="right-align input-name">Соединители</h6>
+                                </div>
+                                <div class="col s3">
+                                    <input name="connector" type="number" class="browser-default"
+                                    value="{{ form.connector.value }}">
+                                </div>
+                                <div class="col s3 no-padding">
+                                    <a href="#" data-target="connector" id="inc" class="counter"><i class="material-icons small">add</i></a>
+                                    <a href="#" data-target="connector" id="dec" class="counter"><i class="material-icons small">remove</i></a>
+                                </div>
+                                {% if form.connector.errors %}
+                                    <div class="col s12 error">{{ form.connector.errors.0|safe }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="button">
+                        <button class="btn waves-effect waves-light main-bg-color" type="submit" name="action">
+                            {% if form_type == 'add' %}Создать заявку{% else %}Сохранить данные{% endif %}
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock content %}
+
+{% block script %}
+    <script type="text/javascript" src="{% static 'js/worker_order.js' %}"></script>
+{% endblock %}

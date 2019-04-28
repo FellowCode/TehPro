@@ -1,6 +1,10 @@
 from django import forms
-from .models import OrderType, Order
+from .models import *
 import string
+from Account.models import Group
+
+from django.forms import ModelForm
+
 
 
 class AddOrderForm(forms.Form):
@@ -9,6 +13,8 @@ class AddOrderForm(forms.Form):
     appointed_time = forms.TimeField()
 
     remark = forms.CharField(max_length=2048, required=False)
+
+    group = forms.IntegerField(required=False)
 
     order_type = forms.IntegerField()
 
@@ -21,6 +27,13 @@ class AddOrderForm(forms.Form):
         if Order.objects.filter(cable_number=cable).exists():
             self.add_error('cable_number', 'Заявка с таким номером кабеля уже есть')
         return cable
+
+    def clean_group(self):
+        group = self.cleaned_data['group']
+        if group:
+            if not Group.objects.filter(id=group).exists():
+                self.add_error('group', 'Такого отряда не существует')
+        return group
 
     def clean_order_type(self):
         order_type = self.cleaned_data['order_type']
@@ -42,13 +55,17 @@ class ChangeOrderForm(AddOrderForm):
             self.add_error('cable_number', 'Такой номер уже используется')
         return cleaned_data
 
-class ClientForm(forms.Form):
-    first_name = forms.CharField(max_length=128)
-    last_name = forms.CharField(max_length=128)
-    surname = forms.CharField(max_length=128)
-    phone = forms.CharField(max_length=11)
-    email = forms.EmailField(required=False)
-    address = forms.CharField(max_length=2048)
+class ClientForm(ModelForm):
+    # first_name = forms.CharField(max_length=128)
+    # last_name = forms.CharField(max_length=128)
+    # surname = forms.CharField(max_length=128)
+    # phone = forms.CharField(max_length=11)
+    # email = forms.EmailField(required=False)
+    # address = forms.CharField(max_length=2048)
+
+    class Meta:
+        model = Client
+        exclude = ['id']
 
     def clean_first_name(self):
         f_name = self.cleaned_data['first_name']
@@ -99,4 +116,30 @@ class ClientForm(forms.Form):
             if char in value:
                 return True
         return False
+
+class OrderForWorkerForm(ModelForm):
+    date_start = forms.DateField()
+    time_start = forms.TimeField()
+    date_end = forms.DateField(required=False)
+    time_end = forms.TimeField(required=False)
+
+    class Meta:
+        model = Order
+        fields = ['is_complete', 'work_type']
+
+    def clean(self):
+        cleaned_data = super(OrderForWorkerForm, self).clean()
+
+        if cleaned_data['is_complete']:
+            if not cleaned_data['date_end']:
+                self.add_error('date_end', 'Нужно заполнить')
+            if not cleaned_data['time_end']:
+                self.add_error('time_end', 'Нужно заполнить')
+        return cleaned_data
+
+class MaterialsForm(ModelForm):
+    class Meta:
+        model = UsedMaterials
+        exclude = ['id']
+
 

@@ -17,6 +17,38 @@
     margin-top: 20px;
     margin-bottom: 20px;
   }
+  .checkbox-row{
+    margin-top: 20px;
+    margin-bottom: 20px;
+  }
+  .checkbox-work-types{
+    margin-top: 10px;
+    margin-bottom: 10px;
+  }
+  .counter-input{
+    input[type=number].browser-default{
+      width: 100%;
+      font-size: 18px;
+      margin-top: 6px;
+      padding: 2px 5px;
+      -moz-appearance:textfield;
+      &::-webkit-outer-spin-button,&::-webkit-inner-spin-button{
+        -webkit-appearance: none;
+      }
+    }
+    .material-icons.small{
+      margin-top: 8px;
+      font-size: 1.5rem;
+    }
+    .error{
+      color: $red_color;
+      font-size: 12px;
+      margin-left: 10px;
+    }
+  }
+  .input-field-inline{
+    margin-top: 20px;
+  }
   .button{
     margin-top: 15px;
     height: 65px;

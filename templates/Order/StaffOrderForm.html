@@ -1,7 +1,9 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load tz %}
 
 {% block title %}ТехПро: Регистрация{% endblock %}
+
 
 {% block stylesheet %}
 {% endblock %}
@@ -29,7 +31,7 @@
                     <div class="row">
                         <div class="input-field col s5 offset-s1">
                             <input id="appointed_date" type="text" name="appointed_date" class="datepicker"
-                                   value="{{ form_order.appointed_date.value.day|stringformat:"02d."|default_if_none:"" }}{{ form_order.appointed_date.value.month|stringformat:"02d."|default_if_none:"" }}{{ form_order.appointed_date.value.year|default_if_none:"" }}">
+                                   value="{% if form_order.appointed_date.value %}{{ form_order.appointed_date.value|date:"d.m.Y" }}{% else %}{% now "d.m.Y" %}{% endif %}">
                             <label for="appointed_date">Дата</label>
                             {% if form_order.appointed_date.errors %}
                                 <span class="helper-text error">{{ form_order.appointed_date.errors.0|safe }}</span>
@@ -38,9 +40,15 @@
                             {% endif %}
                         </div>
                         <div class="input-field col s5">
-                            <input id="appointed_time" type="text" name="appointed_time" class="timepicker"
-                                   value="{{ form_order.appointed_time.value|default_if_none:"" }}">
-                            <label for="appointed_time">Время</label>
+                            <select class="browser-default" name="appointed_time">
+                                <option value="" {% if not form_order.appointed_time.value %}selected{% endif %}>Время</option>
+                                <option value="09:00" {% if form_order.appointed_time.value|time == '9:00' %}selected{% endif %}>09:00</option>
+                                <option value="11:00" {% if form_order.appointed_time.value|time == '11:00' %}selected{% endif %}>11:00</option>
+                                <option value="13:00" {% if form_order.appointed_time.value|time == '13:00' %}selected{% endif %}>13:00</option>
+                                <option value="15:00" {% if form_order.appointed_time.value|time == '15:00' %}selected{% endif %}>15:00</option>
+                                <option value="17:00" {% if form_order.appointed_time.value|time == '17:00' %}selected{% endif %}>17:00</option>
+                                <option value="19:00" {% if form_order.appointed_time.value|time == '19:00' %}selected{% endif %}>19:00</option>
+                            </select>
                             {% if form_order.appointed_time.errors %}
                                 <span class="helper-text error">{{ form_order.appointed_time.errors.0|safe }}</span>
                             {% else %}
@@ -61,7 +69,7 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="input-field col s10 offset-s1">
+                        <div class="input-field col s5 offset-s1">
                             <select class="browser-default" name="order_type">
                                 {% for order_type in order_types %}
                                     <option value="{{ order_type.id }}"
@@ -72,6 +80,20 @@
                                 <span class="helper-text error">{{ form_order.order_type.errors.0|safe }}</span>
                             {% else %}
                                 <span class="helper-text"></span>
+                            {% endif %}
+                        </div>
+                        <div class="input-field col s5">
+                            <select class="browser-default" name="group">
+                                <option value="" {% if not form_order.group.value %}selected{% endif %}>Отряд</option>
+                                {% for group in groups %}
+                                    <option value="{{ group.id }}"
+                                            {% if group.id == form_order.group.value %}selected{% endif %}>{{ group.name }}</option>
+                                {% endfor %}
+                            </select>
+                            {% if form_order.group.errors %}
+                                <span class="helper-text error">{{ form_order.group.errors.0|safe }}</span>
+                            {% else %}
+                                <span class="helper-text">Необязательное поле</span>
                             {% endif %}
                         </div>
                     </div>

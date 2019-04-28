@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 import string
 
 from django.core.exceptions import ValidationError
+from django.forms import ModelForm
 
 from .models import ExtUser, Group
 
@@ -142,3 +143,8 @@ class CreateGroupForm(forms.Form):
             self.add_error('workers', 'Исполнители совпадают')
         return workers
 
+
+class GroupForm(ModelForm):
+    class Meta:
+        model = Group
+        exclude = ['name', 'id']

@@ -1,0 +1,215 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}ТехПро: Регистрация{% endblock %}
+
+{% block stylesheet %}
+{% endblock %}
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <form method="post">
+                {% csrf_token %}
+                <div class="col s12 m10 offset-m1 l8 offset-l2 xl6 offset-xl3 form z-depth-1">
+                    <h4 class="title center-align dark-text-color">Редактирование заявки</h4>
+                    <input name="id" type="hidden" value="{{ form_order.id.value|default_if_none:"" }}">
+                    <div class="row">
+                        <div class="col s10 offset-s2 checkbox-row">
+                            <label>
+                                <input name="is_complete" type="checkbox" class="filled-in"
+                                       {% if form_order.is_complete.value %}checked{% endif %}/>
+                                <span>Завершена</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col s2 offset-s1 input-field-inline">
+                            <h6 class="right-align">Начало</h6>
+                        </div>
+                        <div class="input-field col s4">
+                            <input id="date_start" type="text" name="date_start" class="datepicker"
+                                   value="{% if form_order.date_start.value|date:"d.m.Y" %}{{ form_order.date_start.value|date:"d.m.Y" }}{% else %}{% now "d.m.Y" %}{% endif %}">
+                            <label for="date_start">Дата</label>
+                            {% if form_order.date_start.errors %}
+                                <span class="helper-text error">{{ form_order.date_start.errors.0|safe }}</span>
+                            {% else %}
+                                <span class="helper-text">Формат 24.12.2019</span>
+                            {% endif %}
+                        </div>
+                        <div class="input-field col s4">
+                            <input id="time_start" type="text" name="time_start" class="timepicker"
+                                   value="{{ form_order.time_start.value|default_if_none:"" }}">
+                            <label for="time_start">Время</label>
+                            {% if form_order.time_start.errors %}
+                                <span class="helper-text error">{{ form_order.time_start.errors.0|safe }}</span>
+                            {% else %}
+                                <span class="helper-text"></span>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col s2 offset-s1 input-field-inline">
+                            <h6 class="right-align">Конец</h6>
+                        </div>
+                        <div class="input-field col s4">
+                            <input id="date_end" type="text" name="date_end" class="datepicker"
+                                   value="{% if form_order.date_end.value|date:"d.m.Y" %}{{ form_order.date_end.value|date:"d.m.Y" }}{% else %}{% now "d.m.Y" %}{% endif %}">
+                            <label for="date_start">Дата</label>
+                            {% if form_order.date_end.errors %}
+                                <span class="helper-text error">{{ form_order.date_end.errors.0|safe }}</span>
+                            {% else %}
+                                <span class="helper-text">Формат 24.12.2019</span>
+                            {% endif %}
+                        </div>
+                        <div class="input-field col s4">
+                            <input id="time_end" type="text" name="time_end" class="timepicker"
+                                   value="{{ form_order.time_end.value|default_if_none:"" }}">
+                            <label for="time_start">Время</label>
+                            {% if form_order.time_end.errors %}
+                                <span class="helper-text error">{{ form_order.time_end.errors.0|safe }}</span>
+                            {% else %}
+                                <span class="helper-text"></span>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <h5 class="center-align">Проведенные работы</h5>
+                    {% for work_type in work_types %}
+                    <div class="row">
+                        <div class="col s10 offset-s2 checkbox-work-types">
+                            <label>
+                                <input name="work_type" type="checkbox" class="filled-in" value="{{ work_type.id }}"
+                                       {% if work_type.id in form_order.work_type.value %}checked{% endif %}/>
+                                <span>{{ work_type.name }}</span>
+                            </label>
+                        </div>
+                    </div>
+                    {% endfor %}
+                    <h5 class="center-align">Использованные материалы</h5>
+                    <div class="row">
+                        <div class="col s5 offset-s1 counter-input">
+                            <div class="row">
+                                <div class="col s6">
+                                    <h6 class="right-align input-name">Штекеры RJ45</h6>
+                                </div>
+                                <div class="col s3">
+                                    <input name="plug" type="number" class="browser-default"
+                                    value="{{ form_mat.plug.value }}">
+                                </div>
+                                <div class="col s3 no-padding">
+                                    <a href="#" data-target="plug" id="inc" class="counter"><i class="material-icons small">add</i></a>
+                                    <a href="#" data-target="plug" id="dec" class="counter"><i class="material-icons small">remove</i></a>
+                                </div>
+                                {% if form_mat.plug.errors %}
+                                    <div class="col s12 error">{{ form_mat.plug.errors.0|safe }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="col s5 counter-input">
+                            <div class="row">
+                                <div class="col s6">
+                                    <h6 class="right-align input-name">Кабель (м)</h6>
+                                </div>
+                                <div class="col s3">
+                                    <input name="cable" type="number" class="browser-default"
+                                    value="{{ form_mat.cable.value }}">
+                                </div>
+                                <div class="col s3 no-padding">
+                                    <a href="#" data-step="10" data-target="cable" id="inc" class="counter"><i class="material-icons small">add</i></a>
+                                    <a href="#" data-step="10" data-target="cable" id="dec" class="counter"><i class="material-icons small">remove</i></a>
+                                </div>
+                                {% if form_mat.cable.errors %}
+                                    <div class="col s12 error">{{ form_mat.cable.errors.0|safe }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col s5 offset-s1 counter-input">
+                            <div class="row">
+                                <div class="col s6">
+                                    <h6 class="right-align input-name">Розетки RJ45</h6>
+                                </div>
+                                <div class="col s3">
+                                    <input name="rosette" type="number" class="browser-default"
+                                    value="{{ form_mat.rosette.value }}">
+                                </div>
+                                <div class="col s3 no-padding">
+                                    <a href="#" data-target="rosette" id="inc" class="counter"><i class="material-icons small">add</i></a>
+                                    <a href="#" data-target="rosette" id="dec" class="counter"><i class="material-icons small">remove</i></a>
+                                </div>
+                                {% if form_mat.rosette.errors %}
+                                    <div class="col s12 error">{{ form_mat.rosette.errors.0|safe }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="col s5 counter-input">
+                            <div class="row">
+                                <div class="col s6">
+                                    <h6 class="right-align input-name">Соединители</h6>
+                                </div>
+                                <div class="col s3">
+                                    <input name="connector" type="number" class="browser-default"
+                                    value="{{ form_mat.connector.value }}">
+                                </div>
+                                <div class="col s3 no-padding">
+                                    <a href="#" data-target="connector" id="inc" class="counter"><i class="material-icons small">add</i></a>
+                                    <a href="#" data-target="connector" id="dec" class="counter"><i class="material-icons small">remove</i></a>
+                                </div>
+                                {% if form_mat.connector.errors %}
+                                    <div class="col s12 error">{{ form_mat.connector.errors.0|safe }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col s5 offset-s1 counter-input">
+                            <div class="row">
+                                <div class="col s6">
+                                    <h6 class="right-align input-name">Роутер</h6>
+                                </div>
+                                <div class="col s3">
+                                    <input name="router" type="number" class="browser-default"
+                                    value="{{ form_mat.router.value }}">
+                                </div>
+                                <div class="col s3 no-padding">
+                                    <a href="#" data-target="router" id="inc" class="counter"><i class="material-icons small">add</i></a>
+                                    <a href="#" data-target="router" id="dec" class="counter"><i class="material-icons small">remove</i></a>
+                                </div>
+                                {% if form_mat.router.errors %}
+                                    <div class="col s12 error">{{ form_mat.router.errors.0|safe }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="col s5 counter-input">
+                            <div class="row">
+                                <div class="col s6">
+                                    <h6 class="right-align input-name">ТВ-приставка</h6>
+                                </div>
+                                <div class="col s3">
+                                    <input name="tv_plug" type="number" class="browser-default"
+                                    value="{{ form_mat.tv_plug.value }}">
+                                </div>
+                                <div class="col s3 no-padding">
+                                    <a href="#" data-target="tv_plug" id="inc" class="counter"><i class="material-icons small">add</i></a>
+                                    <a href="#" data-target="tv_plug" id="dec" class="counter"><i class="material-icons small">remove</i></a>
+                                </div>
+                                {% if form_mat.tv_plug.errors %}
+                                    <div class="col s12 error">{{ form_mat.tv_plug.errors.0|safe }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="button">
+                        <button class="btn waves-effect waves-light main-bg-color" type="submit" name="action">
+                            {% if form_type == 'add' %}Создать заявку{% else %}Сохранить данные{% endif %}
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock content %}
+
+{% block script %}
+    <script type="text/javascript" src="{% static 'js/worker_order.js' %}"></script>
+{% endblock %}
