@@ -4,6 +4,7 @@ from .models import *
 from datetime import datetime
 from django.http import Http404
 from django.utils import timezone
+from django.db.models import Q
 
 
 def staff_add(request):
@@ -36,7 +37,7 @@ def staff_add(request):
             group = form_order.cleaned_data['group']
             if group:
                 order.group = Group.objects.get(id=group)
-                for worker in order.group.user_set:
+                for worker in order.group.extuser_set:
                     order.workers.add(worker)
             order.remark = form_order.cleaned_data['remark']
             order.save()
@@ -75,10 +76,13 @@ def staff_change(request, id):
                 return redirect('/order/list/')
             return render(request, 'Order/StaffOrderForm.html', {'form_order': form_order, 'form_client': form_client})
         order = Order.objects.get(id=id)
+        group_id = None
+        if order.group:
+            group_id = order.group.id
         form_order = ChangeOrderForm(initial={'id': id, 'appointed_time': order.appointed_time.astimezone().time(),
                                               'appointed_date': order.appointed_time.astimezone().date(),
                                               'order_type': order.order_type.id,
-                                              'group': order.group.id,
+                                              'group': group_id,
                                               'cable_number': order.cable_number,
                                               'remark': order.remark})
         client = order.client
@@ -95,9 +99,9 @@ def orders_list(request):
 
 def worker_orders(request):
     user = request.user
-    order_list = Order.objects.filter(workers=user)
-
-    return render(request, 'Order/WorkerOrders.html', {'order_list': order_list})
+    group = user.extuser.group
+    order_list = Order.objects.filter(Q(group=group) | Q(workers=user)).distinct()
+    return render(request, 'Order/OrdersList.html', {'order_list': order_list, 'worker_list': True})
 
 #order form for worker
 def worker_order(request, id):
@@ -105,11 +109,21 @@ def worker_order(request, id):
     data['work_types'] = WorkType.objects.all()
     order = Order.objects.filter(id=id).first()
     if order:
+        data['order'] = order
         if request.method == 'POST':
                 materials = order.materials
                 form_order = OrderForWorkerForm(request.POST, instance=order)
                 form_mat = MaterialsForm(request.POST, instance=materials)
                 is_complete = order.is_complete
+
+
+                #запоминаем текущие значения материалов
+                current_mt = {}
+                current_mt['plug'] = materials.plug
+                current_mt['cable'] = materials.cable
+                current_mt['rosette'] = materials.rosette
+                current_mt['connector'] = materials.connector
+
                 if form_order.is_valid() and form_mat.is_valid():
                     order.work_type.clear()
                     ts = datetime.combine(form_order.cleaned_data['date_start'], form_order.cleaned_data['time_start']).astimezone()
@@ -124,10 +138,18 @@ def worker_order(request, id):
                         if form_order.cleaned_data['is_complete'] and order.group:
                             order.is_complete = True
                             order.workers.clear()
-                            for worker in order.group.user_set:
-                                order.workers.add(worker)
+                            for worker in order.group.extuser_set.all():
+                                order.workers.add(worker.user)
                     order.save()
                     form_mat.save()
+
+                    #вычитаем разницу материалов из материалов группы
+                    group = order.group
+                    group.plug = max(0, group.plug - (materials.plug - current_mt['plug']))
+                    group.cable = max(0, group.cable - (materials.cable - current_mt['cable']))
+                    group.connector = max(0, group.plug - (materials.connector - current_mt['connector']))
+                    group.rosette = max(0, group.rosette - (materials.rosette - current_mt['rosette']))
+                    group.save()
 
                     request.session['order_saved'] = True
                     return redirect('/order/worker/list/')
@@ -135,11 +157,29 @@ def worker_order(request, id):
                 data['form_mat'] = form_mat
                 return render(request, 'Order/WorkerOrderForm.html', data)
         order = Order.objects.get(id=id)
-        data['form_order'] = OrderForWorkerForm(instance=order, initial={'time_start': order.time_start.astimezone().time(),
-                                                                         'date_start': order.time_start.astimezone().date(),
-                                                                         'time_end': order.time_end.astimezone().time(),
-                                                                         'date_end': order.time_end.astimezone().date()})
+        datetimes = {}
+        if order.time_start:
+            datetimes['time_start'] = order.time_start.astimezone().time()
+            datetimes['date_start'] = order.time_start.astimezone().date()
+        else:
+            datetimes['time_start'] = None
+            datetimes['date_start'] = None
+        if order.time_end:
+            datetimes['time_end'] = order.time_end.astimezone().time()
+            datetimes['date_end'] = order.time_end.astimezone().date()
+        else:
+            datetimes['time_end'] = None
+            datetimes['date_end'] = None
+        data['form_order'] = OrderForWorkerForm(instance=order, initial=datetimes)
         data['form_mat'] = MaterialsForm(instance=order.materials)
         return render(request, 'Order/WorkerOrderForm.html', data)
     raise Http404
 
+
+def order_full(request, id):
+    order = Order.objects.filter(id=id).first()
+    if order and request.user.is_staff:
+        data = {}
+        data['order'] = order
+        return render(request, 'Order/OrderFull.html', data)
+    raise Http404

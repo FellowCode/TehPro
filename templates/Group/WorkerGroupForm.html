@@ -11,7 +11,21 @@
             <form method="post">
                 {% csrf_token %}
                 <div class="col s12 m10 offset-m1 l8 offset-l2 xl6 offset-xl3 form z-depth-1">
-                    <h4 class="title center-align dark-text-color">"{{ request.user.extuser.group.name }}"</h4>
+                    <div class="col s11 offset-s1"><h6><a href="/group/list/">< Список отрядов</a></h6></div>
+                    <h4 class="title center-align dark-text-color">"{% if group %}{{ group.name }}{% else %}{{ request.user.extuser.group.name }}{% endif %}"</h4>
+                    <h5 class="center-align">Исполнители</h5>
+                    <div class="col s11 offset-s1">
+                        {% if group %}
+                            {% for extuser in group.extuser_set.all %}
+                                <h6>{{ extuser.user.last_name }} {{ extuser.user.first_name }} {{ extuser.surname }}</h6>
+                            {% endfor %}
+                            <h6><a href="/group/change/{{ group.id }}/">Редактировать</a></h6>
+                        {% else %}
+                            {% for extuser in request.user.extuser.group.extuser_set.all %}
+                                <h6>{{ extuser.user.last_name }} {{ extuser.user.first_name }} {{ extuser.surname }}</h6>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
                     <h5 class="center-align">В наличии</h5>
                     <div class="row">
                         <div class="col s5 offset-s1 counter-input">

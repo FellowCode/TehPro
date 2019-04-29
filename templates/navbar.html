@@ -3,13 +3,13 @@
     {% if user.is_staff %}
         <li><a href="/order/add/">Добавить заявку</a></li>
         <li><a href="/order/list/">Список заявок</a></li>
-        <li><a href="/account/create_group/">Создать группу</a></li>
+        <li><a href="/group/create/">Создать отряд</a></li>
+        <li><a href="/group/list/">Список отрядов</a></li>
     {% endif %}
     {% if user.extuser.is_worker %}
-        <li><a href="/account/group/">Мой отряд</a></li>
+        <li><a href="/group/">Мой отряд</a></li>
         <li><a href="/order/worker/list/">Мои заявки</a></li>
     {% endif %}
-    <li><a href="/account/">Личный кабинет</a></li>
 </ul>
 <nav>
     <div class="nav-wrapper main-bg-color">

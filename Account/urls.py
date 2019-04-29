@@ -5,6 +5,5 @@ urlpatterns = [
     path('registration/', registration),
     path('auth/', auth),
     path('logout/', user_logout),
-    path('create_group/', create_group),
-    path('group/', worker_group),
+
 ]

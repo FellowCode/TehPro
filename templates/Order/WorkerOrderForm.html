@@ -22,6 +22,16 @@
                             </label>
                         </div>
                     </div>
+                    {% if order.is_complete %}
+                        <div class="row">
+                            <div class="col s9 offset-s2">
+                                <h5>Исполнители:</h5>
+                                {% for worker in order.workers.all %}
+                                    <h6>{{ worker.last_name }} {{ worker.first_name }} {{ worker.extuser.surname }}</h6>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    {% endif %}
                     <div class="row">
                         <div class="col s2 offset-s1 input-field-inline">
                             <h6 class="right-align">Начало</h6>

@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load order_extra %}
+
+{% block title %}ТехПро: Список отрядов{% endblock %}
+
+{% block stylesheet %}
+{% endblock %}
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <form method="post">
+                {% csrf_token %}
+                <div class="col s12 m10 offset-m1 l8 offset-l2 xl6 offset-xl3 order_list z-depth-1">
+                    {% if groups|length == 0 %}
+                        <h5 class="center-align">Отрядов нет</h5>
+                    {% else %}
+                        <h5 class="center-align">Список отрядов</h5>
+                    {% endif %}
+
+                    {% for group in groups %}
+                        <div class="col s10 offset-s1 group">
+                            <div class="col s12">
+                                <h5>{{ group.name }}</h5>
+                            </div>
+                            <div class="col s12">
+                                {% for extuser in group.extuser_set.all %}
+                                    <h6>{{ extuser.user.last_name }} {{ extuser.user.first_name }} {{ extuser.surname }}</h6>
+                                {% endfor %}
+                            </div>
+                            <div class="col s12">
+                                <p>Штекеры RJ45: <b>{{ group.plug }}</b>, Кабель(м): <b>{{ group.cable }}</b>, Розетки RJ45: <b>{{  group.rosette }}</b>, Соединители: <b>{{ group.connector }}</b></p>
+                            </div>
+
+                            <div class="col s12">
+                                <a href="/group/{{ group.id }}/">Изменить</a>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock content %}
+
+{% block script %}
+    <script type="text/javascript" src="{% static 'js/add_order.js' %}"></script>
+{% endblock %}

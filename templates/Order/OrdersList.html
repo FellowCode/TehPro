@@ -1,8 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
-{% load order_extra %}
 
-{% block title %}ТехПро: Список заявок{% endblock %}
+{% block title %}ТехПро: Регистрация{% endblock %}
 
 {% block stylesheet %}
 {% endblock %}
@@ -19,28 +18,36 @@
                     {% endif %}
 
                     {% for order in order_list %}
-                        <div class="col s10 offset-s1 order">
-                            <div class="col s12">
+                        <div class="col s10 offset-s1 order {% if order.is_complete %}completed{% endif %}">
+                            <div class="col s11 transparent-bg">
                                 <h6>{{ order.client.last_name }} {{ order.client.first_name }} {{ order.client.surname }}</h6>
                             </div>
-                            <div class="col s10">
+                            <div class="col s1 transparent-bg right-align">
+                                <i class="material-icons">check</i>
+                            </div>
+                            <div class="col s10 transparent-bg">
                                 <h6 class="address">{{ order.client.address }}</h6>
                             </div>
-                            <div class="col s2">
-                                <h6 class="datetime right-align">{{ order.appointed_time|astimezone|time }}</h6>
+                            <div class="col s2 transparent-bg">
+                                <h6 class="datetime right-align">{{ order.appointed_time.time }}</h6>
                             </div>
-                            <div class="col s7">
+                            <div class="col s7 transparent-bg">
                                 <h6>Тел: {{ order.client.phone }}</h6>
                             </div>
-                            <div class="col s5">
-                                <h6 class="right-align">{{ order.appointed_time|astimezone|date:"d.m.Y" }}</h6>
+                            <div class="col s5 transparent-bg">
+                                <h6 class="right-align">{{ order.appointed_time.date|date:"d.m.Y" }}</h6>
                             </div>
-                            <div class="col s9">
+                            <div class="col s9 transparent-bg">
                                 <h6>Тип: {{ order.order_type.name }}</h6>
                             </div>
-                            <div class="col s3">
-                                <a href="/order/change/{{ order.id }}/" class="right-align"><h6>Подробнее</h6></a>
+                            <div class="col s3 transparent-bg">
+                                <a href="{% if worker_list %}/order/fromworker/{{ order.id }}/{% else %}/order/change/{{ order.id }}/{% endif %}" class="right-align"><h6>Подробнее</h6></a>
                             </div>
+                            {% if not is_worker %}
+                                <div class="col s12 transparent-bg">
+                                    <a href="/order/full/{{ order.id }}/"><h6>Полная сводка</h6></a>
+                                </div>
+                            {% endif %}
                         </div>
                     {% endfor %}
                 </div>

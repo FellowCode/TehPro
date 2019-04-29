@@ -1,5 +1,5 @@
 from django.db import models
-from Account.models import Group
+from Group.models import Group
 from Account.models import ExtUser
 from django.contrib.auth.models import User
 

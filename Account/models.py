@@ -2,6 +2,7 @@ from django.contrib.auth.models import User
 from django.db import models
 from django.dispatch import receiver
 from django.db.models.signals import post_save
+from Group.models import Group
 
 def get_full_name(self):
     title = self.first_name + ' ' + self.last_name
@@ -19,7 +20,7 @@ class ExtUser(models.Model):
     surname = models.CharField(max_length=256, default='')
     phone = models.CharField(max_length=16, default='')
 
-    group = models.ForeignKey('Group', on_delete=models.SET_NULL, null=True, blank=True)
+    group = models.ForeignKey(Group, on_delete=models.SET_NULL, null=True, blank=True)
 
     class Meta:
         verbose_name = 'ExtUser'
@@ -32,18 +33,7 @@ class ExtUser(models.Model):
         return title
 
 
-class Group(models.Model):
-    name = models.CharField(max_length=128)
 
-    is_active = models.BooleanField(default=True)
-
-    plug = models.IntegerField(default=0)
-    cable = models.IntegerField(default=0)
-    rosette = models.IntegerField(default=0)
-    connector = models.IntegerField(default=0)
-
-    def __str__(self):
-        return str(self.name)
 
 
 @receiver(post_save, sender=User)

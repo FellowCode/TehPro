@@ -1,7 +1,6 @@
 from django import forms
 from .models import *
 import string
-from Account.models import Group
 
 from django.forms import ModelForm
 

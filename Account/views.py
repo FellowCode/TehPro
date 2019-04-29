@@ -15,6 +15,7 @@ def registration(request):
             user = User.objects.create(username=form.cleaned_data['email'].lower(),
                                        email=form.cleaned_data['email'].lower(),
                                        password=form.cleaned_data['password'])
+            user.set_password(form.cleaned_data['password'])
             user.first_name = form.cleaned_data['first_name']
             user.last_name = form.cleaned_data['last_name']
             user.extuser.surname = form.cleaned_data['surname']
@@ -55,37 +56,4 @@ def user_logout(request):
         logout(request)
     return redirect('/')
 
-def create_group(request):
-    data = {}
-    data['workers'] = ExtUser.objects.filter(is_worker=True)
-    if request.method == 'POST':
-        print(request.POST)
-        form = CreateGroupForm(request.POST)
 
-        if form.is_valid():
-            group = Group.objects.create(name=form.cleaned_data['name'])
-            group.save()
-
-            for worker in form.cleaned_data['workers']:
-                extuser = ExtUser.objects.get(id=worker)
-                extuser.group = group
-                extuser.save()
-            data['created'] = True
-            return render(request, 'Account/Create_group.html', data)
-        data['form'] = form
-        return render(request, 'Account/Create_group.html', data)
-    return render(request, 'Account/Create_group.html', data)
-
-def worker_group(request):
-    user = request.user
-    group = user.extuser.group
-    data = {}
-    if group:
-        if request.method == 'POST':
-            form = GroupForm(request.POST, instance=group)
-            if form.is_valid():
-                form.save()
-                return redirect('/')
-        data['form'] = GroupForm(instance=group)
-        return render(request, 'Account/WorkerGroupForm.html', data)
-    raise Http404
