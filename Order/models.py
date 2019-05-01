@@ -28,6 +28,10 @@ class Order(models.Model):
 
     materials = models.OneToOneField('UsedMaterials', models.PROTECT)
 
+    class Meta:
+        verbose_name = 'Заявка'
+        verbose_name_plural = 'Заявки'
+
     def __str__(self):
         return str(self.appointed_time) + ' ' + self.cable_number
 
@@ -47,6 +51,10 @@ class Client(models.Model):
 
     apartment = models.CharField(max_length=64, blank=True, null=True)
 
+    class Meta:
+        verbose_name = 'Клиент'
+        verbose_name_plural = 'Клиенты'
+
     def __str__(self):
         return self.address
 
@@ -55,6 +63,10 @@ class City(models.Model):
     name = models.CharField(max_length=128)
 
     is_default = models.BooleanField(default=False)
+
+    class Meta:
+        verbose_name = 'Город'
+        verbose_name_plural = 'Города'
 
     def save(self, **kwargs):
         if self.is_default:
@@ -73,11 +85,19 @@ class OrderType(models.Model):
 
     price = models.IntegerField()
 
+    class Meta:
+        verbose_name = 'Тип заявки'
+        verbose_name_plural = 'Типы заявок'
+
     def __str__(self):
         return self.name
 
 class WorkType(models.Model):
     name = models.CharField(max_length=256, unique=True)
+
+    class Meta:
+        verbose_name = 'Тип работы'
+        verbose_name_plural = 'Типы работ'
 
     def __str__(self):
         return self.name
@@ -89,4 +109,8 @@ class UsedMaterials(models.Model):
     tv_plug = models.IntegerField(default=0)
     rosette = models.IntegerField(default=0)
     connector = models.IntegerField(default=0)
+
+    class Meta:
+        verbose_name = 'Использованные материалы'
+        verbose_name_plural = 'Использованные материалы'
 

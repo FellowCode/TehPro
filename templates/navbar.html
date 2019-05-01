@@ -7,6 +7,9 @@
         <li><a href="/group/list/">Список отрядов</a></li>
     {% endif %}
     {% if user.extuser.is_worker %}
+        {% if user.is_staff %}
+            <li class="divider"></li>
+        {% endif %}
         <li><a href="/group/">Мой отряд</a></li>
         <li><a href="/order/worker/list/">Мои заявки</a></li>
     {% endif %}

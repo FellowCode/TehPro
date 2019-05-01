@@ -23,8 +23,8 @@ class ExtUser(models.Model):
     group = models.ForeignKey(Group, on_delete=models.SET_NULL, null=True, blank=True)
 
     class Meta:
-        verbose_name = 'ExtUser'
-        verbose_name_plural = 'ExtUsers'
+        verbose_name = 'Расш. пользователь'
+        verbose_name_plural = 'Расш. пользователи'
 
     def __str__(self):
         title = self.user.first_name + ' ' + self.user.last_name

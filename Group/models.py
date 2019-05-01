@@ -10,5 +10,9 @@ class Group(models.Model):
     rosette = models.IntegerField(default=0)
     connector = models.IntegerField(default=0)
 
+    class Meta:
+        verbose_name_plural = 'Отряды'
+        verbose_name = 'Отряд'
+
     def __str__(self):
         return str(self.name)

@@ -7,7 +7,7 @@ admin.site.unregister(Group)
 
 @admin.register(ExtUser)
 class ExtUserAdmin(admin.ModelAdmin):
-    pass
+    readonly_fields = ['user']
 
 
 

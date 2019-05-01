@@ -35,7 +35,7 @@
                             </tr>
                             <tr>
                                 <td>Отряд</td>
-                                <td>{{ order.group.name }}</td>
+                                <td>{% if order.group %}{{ order.group.name }}{% else %}- - -{% endif %}</td>
                             </tr>
                             </tbody>
                         </table>
@@ -76,7 +76,7 @@
                             </tr>
                             <tr>
                                 <td>Адрес</td>
-                                <td>{{ order.client.address }}</td>
+                                <td>г.{{ order.client.city.name }}, {{ order.client.address }}{% if order.client.apartment %}, кв. {{ order.client.apartment }}{% endif %}</td>
                             </tr>
                             </tbody>
                         </table>
