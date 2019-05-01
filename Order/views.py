@@ -13,6 +13,7 @@ def staff_add(request):
     data = {}
     data['form_type'] = 'add'
     data['order_types'] = OrderType.objects.all()
+    data['cities'] = City.objects.all()
     data['groups'] = Group.objects.all()
 
     if request.method == 'POST':
@@ -54,7 +55,7 @@ def staff_change(request, id):
     data = {}
     data['form_type'] = 'change'
     data['order_types'] = OrderType.objects.all()
-    data['citys'] = City.objects.all()
+    data['cities'] = City.objects.all()
     data['groups'] = Group.objects.all()
     order = Order.objects.filter(id=id).first()
     if order:

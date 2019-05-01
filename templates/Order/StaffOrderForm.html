@@ -2,7 +2,7 @@
 {% load static %}
 {% load tz %}
 
-{% block title %}ТехПро: Регистрация{% endblock %}
+{% block title %}ТехПро: Редактирование заявки{% endblock %}
 
 
 {% block stylesheet %}
@@ -179,7 +179,7 @@
                     <div class="row">
                         <div class="input-field col s3 offset-s1">
                             <select class="browser-default" name="city">
-                                {% for city in citys %}
+                                {% for city in cities %}
                                     <option value="{{ city.id }}"
                                             {% if form_order %}{% if city.id == form_order.city.value %}selected{% endif %}{% elif city.is_default %}selected{% endif %}>{{ city.name }}</option>
                                 {% endfor %}
