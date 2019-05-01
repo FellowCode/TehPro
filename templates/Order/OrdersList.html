@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load order_extra %}
 
 {% block title %}ТехПро: Регистрация{% endblock %}
 
@@ -22,20 +23,23 @@
                             <div class="col s11 transparent-bg">
                                 <h6>{{ order.client.last_name }} {{ order.client.first_name }} {{ order.client.surname }}</h6>
                             </div>
+
                             <div class="col s1 transparent-bg right-align">
-                                <i class="material-icons">check</i>
+                                {% if order.is_complete %}
+                                    <i class="material-icons">check</i>
+                                {% endif %}
                             </div>
                             <div class="col s10 transparent-bg">
                                 <h6 class="address">{{ order.client.address }}</h6>
                             </div>
                             <div class="col s2 transparent-bg">
-                                <h6 class="datetime right-align">{{ order.appointed_time.time }}</h6>
+                                <h6 class="datetime right-align">{{ order.appointed_time|astimezone|time }}</h6>
                             </div>
                             <div class="col s7 transparent-bg">
                                 <h6>Тел: {{ order.client.phone }}</h6>
                             </div>
                             <div class="col s5 transparent-bg">
-                                <h6 class="right-align">{{ order.appointed_time.date|date:"d.m.Y" }}</h6>
+                                <h6 class="right-align">{{ order.appointed_time|astimezone|date:"d.m.Y" }}</h6>
                             </div>
                             <div class="col s9 transparent-bg">
                                 <h6>Тип: {{ order.order_type.name }}</h6>

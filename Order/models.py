@@ -41,10 +41,31 @@ class Client(models.Model):
 
     email = models.EmailField(null=True, blank=True)
 
+    city = models.ForeignKey('City', on_delete=models.PROTECT)
+
     address = models.CharField(max_length=2048)
+
+    apartment = models.CharField(max_length=64, blank=True, null=True)
 
     def __str__(self):
         return self.address
+
+
+class City(models.Model):
+    name = models.CharField(max_length=128)
+
+    is_default = models.BooleanField(default=False)
+
+    def save(self, **kwargs):
+        if self.is_default:
+            citys = City.objects.all()
+            for city in citys:
+                city.is_default = False
+                city.save()
+        super(City, self).save(**kwargs)
+
+    def __str__(self):
+        return self.name
 
 
 class OrderType(models.Model):

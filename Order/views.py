@@ -5,6 +5,8 @@ from datetime import datetime
 from django.http import Http404
 from django.utils import timezone
 from django.db.models import Q
+import googlemaps, os
+from TehPro.settings import BASE_DIR
 
 
 def staff_add(request):
@@ -52,6 +54,7 @@ def staff_change(request, id):
     data = {}
     data['form_type'] = 'change'
     data['order_types'] = OrderType.objects.all()
+    data['citys'] = City.objects.all()
     data['groups'] = Group.objects.all()
     order = Order.objects.filter(id=id).first()
     if order:
@@ -94,13 +97,14 @@ def staff_change(request, id):
 
 def orders_list(request):
     order_list = Order.objects.all()
-
+    order_list = order_list.order_by('appointed_time')
     return render(request, 'Order/OrdersList.html', {'order_list': order_list})
 
 def worker_orders(request):
     user = request.user
     group = user.extuser.group
     order_list = Order.objects.filter(Q(group=group) | Q(workers=user)).distinct()
+    order_list = order_list.order_by('appointed_time')
     return render(request, 'Order/OrdersList.html', {'order_list': order_list, 'worker_list': True})
 
 #order form for worker
@@ -183,3 +187,25 @@ def order_full(request, id):
         data['order'] = order
         return render(request, 'Order/OrderFull.html', data)
     raise Http404
+
+def get_distance_matrix(request):
+    with open(os.path.join(BASE_DIR, 'api_key.txt')) as f:
+        api_key = f.readline().strip()
+        print(api_key)
+    client = googlemaps.Client(api_key)
+
+    origins = ['Биробиджан, пер.Угольный 4', 'Биробиджан, Советская 64', 'Биробиджан, Осенняя 13а']
+
+    matrix = client.distance_matrix(origins, origins, language="ru-RU")
+
+    dst_matrix = {}
+    dst_matrix['orders'] = []
+    dst_matrix['matrix'] = [[{}]*len(origins)]*len(origins)
+
+    for i, row in enumerate(matrix['rows']):
+        for j, col in enumerate(row['elements']):
+            dst_matrix['matrix'][i][j]['distance'] = col['distance']['value']
+            dst_matrix['matrix'][i][j]['duration'] = col['duration']['value']
+            print('{0}-{1}: dist = {2}, dur = {3}'.format(i, j, col['distance']['value'], col['duration']['value']))
+
+    return render(request, 'Main/Index.html')

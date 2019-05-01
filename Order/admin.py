@@ -9,6 +9,10 @@ class OrderAdmin(admin.ModelAdmin):
 class ClientAdmin(admin.ModelAdmin):
     pass
 
+@admin.register(City)
+class CityAdmin(admin.ModelAdmin):
+    pass
+
 @admin.register(OrderType)
 class OrderTypesAdmin(admin.ModelAdmin):
     pass

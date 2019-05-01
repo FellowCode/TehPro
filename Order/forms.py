@@ -55,12 +55,6 @@ class ChangeOrderForm(AddOrderForm):
         return cleaned_data
 
 class ClientForm(ModelForm):
-    # first_name = forms.CharField(max_length=128)
-    # last_name = forms.CharField(max_length=128)
-    # surname = forms.CharField(max_length=128)
-    # phone = forms.CharField(max_length=11)
-    # email = forms.EmailField(required=False)
-    # address = forms.CharField(max_length=2048)
 
     class Meta:
         model = Client

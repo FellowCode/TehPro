@@ -41,13 +41,31 @@
                         </div>
                         <div class="input-field col s5">
                             <select class="browser-default" name="appointed_time">
-                                <option value="" {% if not form_order.appointed_time.value %}selected{% endif %}>Время</option>
-                                <option value="09:00" {% if form_order.appointed_time.value|time == '9:00' %}selected{% endif %}>09:00</option>
-                                <option value="11:00" {% if form_order.appointed_time.value|time == '11:00' %}selected{% endif %}>11:00</option>
-                                <option value="13:00" {% if form_order.appointed_time.value|time == '13:00' %}selected{% endif %}>13:00</option>
-                                <option value="15:00" {% if form_order.appointed_time.value|time == '15:00' %}selected{% endif %}>15:00</option>
-                                <option value="17:00" {% if form_order.appointed_time.value|time == '17:00' %}selected{% endif %}>17:00</option>
-                                <option value="19:00" {% if form_order.appointed_time.value|time == '19:00' %}selected{% endif %}>19:00</option>
+                                <option value="" {% if not form_order.appointed_time.value %}selected{% endif %}>Время
+                                </option>
+                                <option value="09:00"
+                                        {% if form_order.appointed_time.value|time == '9:00' %}selected{% endif %}>09:00
+                                </option>
+                                <option value="11:00"
+                                        {% if form_order.appointed_time.value|time == '11:00' %}selected{% endif %}>
+                                    11:00
+                                </option>
+                                <option value="13:00"
+                                        {% if form_order.appointed_time.value|time == '13:00' %}selected{% endif %}>
+                                    13:00
+                                </option>
+                                <option value="15:00"
+                                        {% if form_order.appointed_time.value|time == '15:00' %}selected{% endif %}>
+                                    15:00
+                                </option>
+                                <option value="17:00"
+                                        {% if form_order.appointed_time.value|time == '17:00' %}selected{% endif %}>
+                                    17:00
+                                </option>
+                                <option value="19:00"
+                                        {% if form_order.appointed_time.value|time == '19:00' %}selected{% endif %}>
+                                    19:00
+                                </option>
                             </select>
                             {% if form_order.appointed_time.errors %}
                                 <span class="helper-text error">{{ form_order.appointed_time.errors.0|safe }}</span>
@@ -159,14 +177,37 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="input-field col s10 offset-s1">
+                        <div class="input-field col s3 offset-s1">
+                            <select class="browser-default" name="city">
+                                {% for city in citys %}
+                                    <option value="{{ city.id }}"
+                                            {% if form_order %}{% if city.id == form_order.city.value %}selected{% endif %}{% elif city.is_default %}selected{% endif %}>{{ city.name }}</option>
+                                {% endfor %}
+                            </select>
+                            {% if form_order.order_type.errors %}
+                                <span class="helper-text error">{{ form_order.order_type.errors.0|safe }}</span>
+                            {% else %}
+                                <span class="helper-text"></span>
+                            {% endif %}
+                        </div>
+                        <div class="input-field col s5 ">
                             <input id="address" name="address" type="text"
                                    value="{{ form_client.address.value|default_if_none:"" }}">
-                            <label for="phone">Адрес</label>
+                            <label for="address">Адрес</label>
                             {% if form_client.address.errors %}
                                 <span class="helper-text error">{{ form_client.address.errors.0|safe }}</span>
                             {% else %}
                                 <span class="helper-text">Допускаются запятые и точки</span>
+                            {% endif %}
+                        </div>
+                        <div class="input-field col s2">
+                            <input id="apartment" name="apartment" type="text"
+                                   value="{{ form_client.apartment.value|default_if_none:"" }}">
+                            <label for="apartment">Квартира</label>
+                            {% if form_client.apartment.errors %}
+                                <span class="helper-text error">{{ form_client.apartment.errors.0|safe }}</span>
+                            {% else %}
+                                <span class="helper-text"></span>
                             {% endif %}
                         </div>
                     </div>

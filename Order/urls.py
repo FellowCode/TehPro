@@ -8,4 +8,5 @@ urlpatterns = [
     path('list/', orders_list),
     path('worker/list/', worker_orders),
     path('fromworker/<id>/', worker_order),
+    path('distmtx/', get_distance_matrix),
 ]
