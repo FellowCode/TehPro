@@ -47,7 +47,7 @@
                             <div class="col s3 transparent-bg">
                                 <a href="{% if worker_list %}/order/fromworker/{{ order.id }}/{% else %}/order/change/{{ order.id }}/{% endif %}" class="right-align"><h6>Подробнее</h6></a>
                             </div>
-                            {% if not is_worker %}
+                            {% if user.is_staff %}
                                 <div class="col s12 transparent-bg">
                                     <a href="/order/full/{{ order.id }}/"><h6>Полная сводка</h6></a>
                                 </div>

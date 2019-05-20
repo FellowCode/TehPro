@@ -20,14 +20,8 @@ def staff_add(request):
         form_order = AddOrderForm(request.POST)
         form_client = ClientForm(request.POST)
         if form_order.is_valid() and form_client.is_valid():
-            client = Client.objects.create()
-            client.first_name = form_client.cleaned_data['first_name']
-            client.last_name = form_client.cleaned_data['last_name']
-            client.surname = form_client.cleaned_data['surname']
-            client.phone = form_client.cleaned_data['phone']
-            client.email = form_client.cleaned_data['email']
-            client.address = form_client.cleaned_data['address']
-            client.save()
+
+            client = form_client.save()
 
             dt = datetime.combine(form_order.cleaned_data['appointed_date'], form_order.cleaned_data['appointed_time'])
             used_materials = UsedMaterials.objects.create()
@@ -131,8 +125,8 @@ def worker_order(request, id):
 
                 if form_order.is_valid() and form_mat.is_valid():
                     order.work_type.clear()
-                    ts = datetime.combine(form_order.cleaned_data['date_start'], form_order.cleaned_data['time_start']).astimezone()
-                    te = timezone.datetime.combine(form_order.cleaned_data['date_end'], form_order.cleaned_data['time_end']).astimezone()
+                    ts = timezone.datetime.combine(form_order.cleaned_data['date_start'], form_order.cleaned_data['time_start'])#.astimezone()
+                    te = timezone.datetime.combine(form_order.cleaned_data['date_end'], form_order.cleaned_data['time_end'])
                     order.time_start = ts
                     order.time_end = te
 

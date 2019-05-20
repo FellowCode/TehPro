@@ -54,6 +54,8 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 
     'TehPro.middleware.TimezoneMiddleware',
+    'TehPro.middleware.UserBasedExceptionMiddleware',
+
 ]
 
 ROOT_URLCONF = 'TehPro.urls'
@@ -130,3 +132,4 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"),
 
 ]
+
