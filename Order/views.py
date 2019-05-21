@@ -186,7 +186,6 @@ def order_full(request, id):
 def get_distance_matrix(request):
     with open(os.path.join(BASE_DIR, 'api_key.txt')) as f:
         api_key = f.readline().strip()
-        print(api_key)
     client = googlemaps.Client(api_key)
 
     origins = ['Биробиджан, пер.Угольный 4', 'Биробиджан, Советская 64', 'Биробиджан, Осенняя 13а']
@@ -204,3 +203,13 @@ def get_distance_matrix(request):
             print('{0}-{1}: dist = {2}, dur = {3}'.format(i, j, col['distance']['value'], col['duration']['value']))
 
     return render(request, 'Main/Index.html')
+
+
+def division_of_orders(request):
+    data = {}
+    data['groups'] = Group.objects.all()
+
+    if request.method == 'POST':
+        groups = request.POST['groups']
+        return render(request, 'Order/DivisionResult.html', data)
+    return render(request, 'Order/DivisionOfOrder.html', data)

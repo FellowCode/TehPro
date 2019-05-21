@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load order_extra %}
+
+{% block title %}ТехПро: Разделение заявок{% endblock %}
+
+{% block stylesheet %}
+{% endblock %}
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <form method="post">
+                {% csrf_token %}
+                <div class="col s12 m10 offset-m1 l8 offset-l2 xl6 offset-xl3 order_list z-depth-1">
+                    <h4 class="center-align" style="font-size: 2rem">Разделение заявок по отрядам</h4>
+                    <h5 class="center-align" style="margin-top: 30px">Выберите группы</h5>
+                    <div class="col s10 offset-s2" style="margin-top: 30px; margin-bottom: 30px">
+                    {% for group in groups %}
+                        <p>
+                          <label>
+                            <input type="checkbox" class="filled-in" name="groups" checked="checked"/>
+                            <span style="font-size: 20px;">{{ group.name }}</span>
+                          </label>
+                        </p>
+                    {% endfor %}
+                    </div>
+                    <div class="col s6 offset-s3">
+                        <button type="submit" class="btn main-bg-color full-width">Распределить</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock content %}

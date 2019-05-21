@@ -54,7 +54,6 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 
     'TehPro.middleware.TimezoneMiddleware',
-    'TehPro.middleware.UserBasedExceptionMiddleware',
 
 ]
 
