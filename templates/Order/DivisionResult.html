@@ -11,9 +11,12 @@
         <div class="row">
             <form method="post">
                 {% csrf_token %}
-                <div class="col s12 m10 offset-m1 l8 offset-l2 xl6 offset-xl3 order_list z-depth-1">
+                <div class="col s12 l10 offset-l1 xl8 offset-xl2 order_list z-depth-1">
                     <h4 class="center-align" style="font-size: 2rem">Результаты разделения</h4>
-                    {% for group in groups %}
+                    <div class="col s12">
+                        {{ list }}
+                    </div>
+                    {% for group, orders, length in groups %}
                         <div class="col s10 offset-s1" style="border: solid 1px #ececec">
                             <h5 class="center-align">"{{ group.name }}"</h5>
                             <table>
@@ -21,21 +24,22 @@
                                 <tr>
                                     <th>Адрес</th>
                                     <th>Клиент</th>
-                                    <th>Номер телефона</th>
+                                    <th>Телефон</th>
                                     <th>Время</th>
                                 </tr>
                                 </thead>
                                 <tbody>
-                                    {% for i in i|rjust:5 %}
+                                    {% for order in orders %}
                                         <tr>
-                                            <td>Адрес{{ forloop.counter }}</td>
-                                            <td>Клиент{{ forloop.counter }}</td>
-                                            <td>Номер телефона{{ forloop.counter }}</td>
-                                            <td>Время{{ forloop.counter }}</td>
+                                            <td>{{ order.client.address }}</td>
+                                            <td>{{ order.client.last_name }} {{ order.client.first_name }} {{ order.client.surname }}</td>
+                                            <td>{{ order.client.phone }}</td>
+                                            <td>{{ order.appointed_time|time:"H:i" }}</td>
                                         </tr>
                                     {% endfor %}
                                 </tbody>
                             </table>
+                            <p>Время затраченное на передвижение: <b>{{ length }} мин.</b></p>
                         </div>
                     {% endfor %}
                 </div>

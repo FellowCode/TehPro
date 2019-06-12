@@ -18,7 +18,7 @@
                     {% for group in groups %}
                         <p>
                           <label>
-                            <input type="checkbox" class="filled-in" name="groups" checked="checked"/>
+                            <input type="checkbox" class="filled-in" name="groups" checked="checked" value="{{ group.id }}"/>
                             <span style="font-size: 20px;">{{ group.name }}</span>
                           </label>
                         </p>
