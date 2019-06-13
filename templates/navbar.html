@@ -1,6 +1,7 @@
 {% load static %}
 <ul id="menu" class="dropdown-content">
     {% if user.is_staff %}
+        <li><a href="/materials/">Материалы</a></li>
         <li><a href="/order/add/">Добавить заявку</a></li>
         <li><a href="/order/list/">Список заявок</a></li>
         <li><a href="/group/create/">Создать отряд</a></li>

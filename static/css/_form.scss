@@ -32,6 +32,10 @@
     margin-bottom: 10px;
   }
   .counter-input{
+    &.materials{
+      margin-top: 30px;
+    }
+
     input[type=number].browser-default{
       width: 100%;
       font-size: 18px;
@@ -56,7 +60,7 @@
     margin-top: 20px;
   }
   .button{
-    margin-top: 15px;
+    margin-top: 30px;
     height: 65px;
     button{
       position: absolute;
